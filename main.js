@@ -1,7 +1,9 @@
 var fs = require('fs');
 
 const evaluate = require('./visitor').evaluate;
-var data = fs.readFileSync('./test.md', 'utf8');
+var data = fs.readFileSync('./models.md', 'utf8');
 
-console.log('\n' + data + '\n\n');
-console.log(evaluate(data));
+//console.log('\n' + data + '\n\n');
+let jsonObj = evaluate(data);
+console.log(jsonObj);
+console.log(JSON.stringify(jsonObj));

@@ -38,7 +38,7 @@ function calcRoot(node : Parser.Root, context : Context) : object[] {
             let line = [];
             // add time on left
             let startTime : string = times[t].toISOString().split("T")[1].substring(0,5);
-            line.push({start: startTime, rowspan:1});
+            line.push({start: startTime, rowSpan:1});
             // for each room add the appropriate event or nothing if rowspan
             for (let roomID = 0; roomID < roomsSchedule.length; roomID++) {
                 const roomSchedule = roomsSchedule[roomID];
@@ -57,14 +57,14 @@ function calcRoot(node : Parser.Root, context : Context) : object[] {
                     line.push({
                         start: startTime, 
                         end: slot.getEnd().toISOString().split("T")[1].substring(0,5),
-                        rowspan: event.rowspan ? event.rowspan : 1,
+                        rowSpan: slot.getRowspan(),
                         date: day.toISOString().split("T")[0],
                         room: entry["rooms"][roomID],
                         events:[theEvent]
                     });
                 } else if (slot) {
                     line.push({
-                        rowspan: 1
+                        rowSpan: 1
                     });
                 }
             }
@@ -74,16 +74,16 @@ function calcRoot(node : Parser.Root, context : Context) : object[] {
         line.push(
             {
                 end : times[times.length-1].toISOString().split("T")[1].substring(0,5),
-                rowspan : 1
+                rowSpan : 1
             }
         );
         for (const room of entry["rooms"]) {
-            line.push({rowspan : 1});
+            line.push({rowSpan : 1});
         }
         entry["sessionGroups"].push(line);
         out.push(entry);
     }
-    console.log(context);
+    //console.log(context);
     return out;
 }
 
@@ -117,7 +117,7 @@ function calcPaper(node : Parser.Paper, context : Context) : Paper {
 
     for (let author of node.authors) {
         const theAuthor = calcPerson(author, context);
-        thePaper.authors.push(thePaper);
+        thePaper.authors.push(theAuthor);
     }
     return thePaper;
 }
@@ -279,7 +279,6 @@ interface Event{
     type ?: string;
     organizers ?: Person[];
     papers ?: Paper[];
-    rowspan ?: number;
 }
 
 interface Room {
@@ -329,7 +328,7 @@ class Schedule {
                 timeSet.add(slot.getEnd());
             }
         } 
-        this.displayTimes = Array.from(timeSet.values()).sort();
+        this.displayTimes = Array.from(timeSet.values()).sort((a : Date, b : Date) => {return a.getTime() - b.getTime()});
         for (let [room, slots] of this.schedulePerRoom) {
             let slotIndex = 0;
 
@@ -337,12 +336,15 @@ class Schedule {
                 if(slotIndex >= slots.length){
                     let ts : TimeSlot = new TimeSlot(this.displayTimes[index],this.displayTimes[index+1],null);
                     slots.push(ts);
+                    slotIndex++;
                 } else if (Math.abs(this.displayTimes[index].getTime() - slots[slotIndex].getStart().getTime()) < 60000){
                     let rowspan = 0
                     while (Math.abs(this.displayTimes[index+rowspan].getTime() - slots[slotIndex].getEnd().getTime()) > 60000) {
                         rowspan++; // compute rowspan
                     }
-                    for (var i = 1; i < rowspan; i++) slots.splice(slotIndex+1,0,null);
+                    for (var i = 1; i < rowspan; i++) {
+                        slots.splice(slotIndex+1,0,null);
+                    }
                     index += rowspan - 1; // counter the loop ++
                     slots[slotIndex].setRowspan(rowspan);
                     slotIndex += rowspan;
@@ -360,10 +362,12 @@ class TimeSlot {
     private start:Date;
     private end:Date;
     private event:Event;
+    private rowspan:number;
     constructor(start : Date, end : Date, event : Event){
         this.start = start;
         this.end = end;
         this.event = event;
+        this.rowspan = 1;
     };
 
     compareTo(other : TimeSlot) : number {
@@ -379,7 +383,10 @@ class TimeSlot {
         return this.event;
     }
     setRowspan(rowspan : number){
-        this.event.rowspan = rowspan;
+        this.rowspan = rowspan;
+    }
+    getRowspan() : number{
+        return this.rowspan;
     }
 }
 

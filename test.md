@@ -7,7 +7,7 @@
 ## From Language Engineering to Viewpoint Engineering
 
 - Colin Atkinson, Professor at dedededede, https://cccdccdcdcdcd.fr
-- Machin Truc, Chercheur, https://jgqzdkb.fr, machin@gmail.com
+- Machin Truc, Chercheur, machin@gmail.com
 
 *abstract*: 
 cccdccdcdcdcd
@@ -17,22 +17,22 @@ cccdccdcdcdcd
 
 # events
 
-## Coffee break
+## (CoffeeBreak) Coffee break
 
-## (c) cdccdcddc
+## (Keynote) cdccdcddc
 - Machin Truc, Chercheur, https://jgqzdkb.fr, machin@gmail.com
 *abstract*:
 This is an organized event.
 
-## (w) cdccdc
+## (Workshop) cdccdc
 - Machin Truc, Chercheur, https://jgqzdkb.fr, machin@gmail.com
 
-## (coffee) cdccdcddcsdf
+## (Tutorial) cdccdcddcsdf
 - Machin Truc, Chercheur, https://jgqzdkb.fr, machin@gmail.com
 
-## (keynote) cdccdcddcpotet
+## (Opening) cdccdcddcpotet
 
-## [talksession] qzfefgsg
+## [TalkSession] qzfefgsg
 - Machin Truc, Chercheur, https://jgqzdkb.fr, machin@gmail.com
 
 ### papers
